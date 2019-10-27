@@ -2,12 +2,10 @@ import os
 import pandas as pd
 import numpy as np
 
-RAW_DATA_PATH = '../data/raw/'
-
 
 def load_data(file_path):
     df = pd.read_csv(file_path)
-    num_recs, num_dims = file_path.shape
+    num_recs, num_dims = df.shape
 
     print('num records: ', num_recs)
     print('num dimensions: ', num_dims)
@@ -18,8 +16,16 @@ def load_data(file_path):
 def get_features_with_missing_values(data):
     features = data.columns
     null_features = features[data.isnull().any()]
+    null_features = list(null_features)
 
-    return list(null_features)
+    # dictionary with key: feature, value: number of rows with values missing
+    missing_features = dict()
+
+    for f in null_features:
+        temp = data[f]
+        missing_features[f] = temp[temp.isnull()].shape[0]
+
+    return missing_features
 
 
 def replace_missing_with_single_value(data, feature, value, add_feature=False):
