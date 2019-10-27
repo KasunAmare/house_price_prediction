@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def load_data(file_path):
@@ -72,15 +73,34 @@ def three_sigma_outlier(data, feature):
 
     interval_upper = ave + 3 * std
 
-    outlier_rows = data[data['SaleDollarCnt'] > interval_upper].index
+    outlier_rows = data[data[feature] > interval_upper].index
 
     data = data.drop(outlier_rows, axis=0)
 
     return data
 
 
+def plot_distribution(data, feature):
+    fig, ax = plt.subplots()
+    fig.set_size_inches((8, 4))
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
 
+    mean = data[feature].mean()
+    std = data[feature].std()
 
+    data[feature].hist(bins=500, ax=ax, color='gray')
+    plt.axvline(mean, color='k', linestyle='dashed', linewidth=1, label='mean')
+    plt.axvline(mean + 3 * std, color='r', linestyle='dashed', linewidth=1, label=' mean + 3 * sigma')
+
+    plt.xlim(0, 4000000)
+    plt.xlabel(feature)
+    plt.ylabel('Frequency')
+    ax.legend(frameon=False)
+
+    ax.grid(b=None)
+
+    return fig, ax
 
 
 
