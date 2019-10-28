@@ -5,11 +5,23 @@ from geopy.distance import distance
 
 # Categorical variables. Ensure that categorical features are handled at the end
 # TODO: Ensure the same categories in train and test
-def add_dummies_categorical(data, feature):
-    data['ViewType'] = data['ViewType'].astype('category')
-    data = pd.get_dummies(data=data, columns=[feature])
+def add_dummies_categorical(data, train_data, feature):
+    data[feature] = data[feature].astype('category')
+    train_data[feature] = train_data[feature].astype('category')
 
-    return data
+    temp_test = pd.get_dummies(data=data, columns=[feature])
+    temp_train = pd.get_dummies(data=train_data, columns=[feature])
+
+    missing_in_test = set(temp_train.columns) - set(temp_test.columns)
+    new_in_test = set(temp_test.columns) - set(temp_train.columns)
+    
+    for c in missing_in_test:
+        temp_test[c] = 0
+    
+    if new_in_test:
+        temp_test = temp_test.drop(columns=new_in_test)     
+
+    return temp_test
 
 
 def target_encode_categorical(data, train_data, feature, target_feature):
@@ -56,6 +68,7 @@ def add_transaction_age(data, ref_date='10/25/2019'):
     :param ref_date: the reference date which with respect to the counting is done
     :return: data with new feature
     """
+    data['TransDate'] = pd.to_datetime(data['TransDate'])
     ref_date = pd.to_datetime(ref_date)
     data['DaysToTrans'] = (ref_date - data['TransDate'])/np.timedelta64(1, 'D')
 
@@ -72,7 +85,7 @@ def add_residential(data, residential_codes, zone_code_feature='ZoneCodeCounty')
 
     s = data[zone_code_feature]
 
-    msk = (s in residential_codes)
+    msk = (s.str.contains('|'.join(residential_codes)))
 
     data['residential'] = 0
     data.loc[msk, 'Residential'] = 1
