@@ -1,8 +1,12 @@
 import os
+import matplotlib.pyplot as plt
+from matplotlib import rcParams
+rcParams.update({'figure.autolayout': True})
 
 from src.data_preparation.data_utils import load_data
 from src.pipelines.feature_creation import categorical_data_pipeline, new_features_pipeline, remove_unused_features
 from src.pipelines.model_pipeline import model_selection, model_pipeline
+# from sklearn.ensemble import RandomForestRegressor
 
 
 ClEANED_DATA_FOLDER = '../data/cleaned/'
@@ -17,24 +21,28 @@ test_data_int_path = os.path.join(INTERMEDIATE_DATA_FOLDER, 'test_data.csv')
 
 def run_system(selected_model):
     """ Run the complete pipeline """
+    print('loading data...')
     train_data = load_data(train_data_cleaned_path)
-    test_data = load_data(test_data_cleaned_path)
+    # test_data = load_data(test_data_cleaned_path)
 
     # Add new features
+    print('Adding new features...')
     train_data = new_features_pipeline(train_data)
-    test_data = new_features_pipeline(test_data)
+    # test_data = new_features_pipeline(test_data)
 
     # Handle Categorical Features
+    print('Handling categorical variables...')
     train_data = categorical_data_pipeline(data=train_data, train_data=train_data)
-    test_data = categorical_data_pipeline(data=test_data, train_data=train_data)
+    # test_data = categorical_data_pipeline(data=test_data, train_data=train_data)
 
     # Dropping unused columns
+    print('Dropping unused columns...')
     train_data = remove_unused_features(train_data)
-    test_data = remove_unused_features(test_data)
+    # test_data = remove_unused_features(test_data)
 
     # Run model
     # Note: Model selection pipeline needs to run before function
-
+    print('Running model...')
     metrics_df = model_pipeline(train_data, selected_model)
 
     return metrics_df
@@ -53,14 +61,22 @@ def main():
     parameters = [rf_param]
 
     train_data = load_data(train_data_cleaned_path)
+
     selected_model = model_selection(train_data=train_data, models=models, parameters=parameters)
+
+    # Temp
+    # selected_model = RandomForestRegressor()
 
     metrics = run_system(selected_model)
 
+    print('Results:')
     print(metrics)
 
 
 if __name__ == '__main__':
     main()
+
+    plt.show()
+    plt.tight_layout()
 
 
