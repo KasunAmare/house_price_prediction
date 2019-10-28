@@ -5,10 +5,9 @@ import matplotlib.pyplot as plt
 
 def load_data(file_path):
     df = pd.read_csv(file_path)
-    num_recs, num_dims = df.shape
-
-    print('num records: ', num_recs)
-    print('num dimensions: ', num_dims)
+    # num_recs, num_dims = df.shape
+    # print('num records: ', num_recs)
+    # print('num dimensions: ', num_dims)
 
     return df
 

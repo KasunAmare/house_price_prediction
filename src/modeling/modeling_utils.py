@@ -32,7 +32,7 @@ def plot_error_distribution(y_true, y_pred):
     plt.axvline(aape, color='r', linestyle='dashed', linewidth=1, label='aape')
     plt.axvline(mape, color='b', linestyle='dashed', linewidth=1, label='mape')
     ax.legend(frameon=False)
-    plt.show()
+    # plt.show()
 
     return ax
 
@@ -44,15 +44,17 @@ def get_feature_importance_plot(tree_model, features):
     s = s.sort_values(ascending=False)
 
     fig, ax = plt.subplots()
-    fig.set_size_inches((12, 4))
+    fig.set_size_inches((10, 6))
 
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
 
     s.plot(kind='bar', ax=ax, color='gray')
-    fig.savefig('report/figures/feature_importance_GBDT.svg', format='svg', dpi=1200)
-    fig.savefig('report/figures/feature_importance_GBDT.pdf', format='pdf', dpi=1200)
-    plt.show()
+    plt.gcf().subplots_adjust(bottom=0.15)
+
+    # fig.savefig('report/figures/feature_importance_GBDT.svg', format='svg', dpi=1200)
+    # fig.savefig('report/figures/feature_importance_GBDT.pdf', format='pdf', dpi=1200)
+    # plt.show()
 
     return ax
 
