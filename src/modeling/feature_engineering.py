@@ -104,7 +104,7 @@ def add_distance_to_center(data, center_lat_long=(47.608013, -122.335167)):
     data['Latitude'] = data['Latitude']/1000000
     data['Longitude'] = data['Longitude'] / 1000000
 
-    temp = data.apply(lambda x: distance((lat, long), (x['Latitude'], x['Longitude'])), axis=1)
+    temp = data.apply(lambda x: distance((lat, long), (x['Latitude'], x['Longitude'])).km, axis=1)
 
     data['distance_to_center'] = temp
 
