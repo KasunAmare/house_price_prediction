@@ -3,6 +3,7 @@ import pandas as pd
 
 from src.modeling.modeling_utils import get_feature_importance_plot, get_accuracy_metrics
 from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import make_scorer
 
 
 def optimize_hyper_paramters(model, parameters, train_x, train_y, scoring=None, folds=5):
@@ -16,6 +17,9 @@ def optimize_hyper_paramters(model, parameters, train_x, train_y, scoring=None, 
     :param folds: number of folds for cross validation
     :return: the model with highest score
     """
+    if scoring is not None:
+        scoring = make_scorer(scoring, greater_is_better=False)
+
     reg = GridSearchCV(model, param_grid=parameters, cv=folds,n_jobs=-1, scoring=scoring)
     reg.fit(train_x, train_y)
 
