@@ -87,7 +87,8 @@ def add_residential(data, residential_codes, zone_code_feature='ZoneCodeCounty')
 
     msk = (s.str.contains('|'.join(residential_codes)))
 
-    data['residential'] = 0
+    data['Residential'] = 0
+
     data.loc[msk, 'Residential'] = 1
 
     return data
