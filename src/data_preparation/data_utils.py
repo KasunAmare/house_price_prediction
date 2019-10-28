@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -102,6 +101,13 @@ def plot_distribution(data, feature):
 
     return fig, ax
 
+
+def split_input_output_data(data, output_column):
+    y = data[output_column]
+
+    x = data.drop(columns=[output_column])
+
+    return x, y
 
 
 
